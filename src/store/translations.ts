@@ -20,6 +20,9 @@ const translations = {
       inviteLinkCopied: 'Lien d\'invitation copié !',
       startGame: 'Commencer le jeu',
       leaveLobby: 'Quitter le salon',
+      roomOf: 'Salon de',
+      join: 'Rejoindre',
+      players: 'Joueurs'
     },
     en: {
       title: 'ChronoWhale',
@@ -42,6 +45,9 @@ const translations = {
       inviteLinkCopied: 'Invite link copied!',
       startGame: 'Start Game',
       leaveLobby: 'Leave Lobby',
+      roomOf: 'Room of',
+      join: 'Join',
+      players: 'Players'
     },
   };
   

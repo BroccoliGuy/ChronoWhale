@@ -27,3 +27,25 @@
     color: #702e2e; /* Change la couleur au survol */
   }
   
+  .reload-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .spinning {
+    animation: spin 1s infinite linear; /* Animation de rotation */
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
