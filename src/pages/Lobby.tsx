@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { socket, connectSocket } from "../utils/socket";
-import { useLanguage } from '../utils/LanguageContext'; // Import du hook de langue
+import { useLanguage } from "../utils/LanguageContext"; // Import du hook de langue
 import translations from "../store/translations"; // Import des traductions
-import '../styles/Lobby.css';
+import "../styles/Lobby.css";
 
 const Lobby: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { nickname, roomCode, isHost, avatar } = location.state || { nickname: "", roomCode: "", isHost: false, avatar: "" }; // Avatar ajouté
+
+  const { nickname, roomCode: stateRoomCode, isHost, avatar } = location.state || { nickname: "", roomCode: "", isHost: false, avatar: "" };
+  const roomCode = stateRoomCode || new URLSearchParams(window.location.search).get("room"); // Priorité à state
+  
   const { language, setLanguage } = useLanguage(); // Utilisation du hook de langue
   const t = translations[language]; // Accès aux traductions
 
   const [players, setPlayers] = useState<{ name: string; isHost: boolean; avatar: string; team?: number }[]>([
-    { name: nickname, isHost, avatar, team: undefined }, // Ajouter l'avatar
+    { name: nickname, isHost, avatar, team: undefined },
   ]);
   const [inviteLink, setInviteLink] = useState<string>("");
 
@@ -21,7 +24,7 @@ const Lobby: React.FC = () => {
     connectSocket();
 
     if (nickname && roomCode) {
-      socket.emit("join-room", { roomCode, nickname, isHost, avatar }); // Transmettre l'avatar lors de la connexion
+      socket.emit("join-room", { roomCode, nickname, isHost, avatar });
     }
 
     socket.on("update-players", (players: { name: string; isHost: boolean; avatar: string; team?: number }[]) => {
@@ -29,7 +32,9 @@ const Lobby: React.FC = () => {
     });
 
     const handleUnload = () => {
-      socket.emit("leave-room", { roomCode, nickname });
+      if (roomCode) {
+        socket.emit("leave-room", { roomCode, nickname });
+      }
     };
 
     window.addEventListener("beforeunload", handleUnload);
@@ -54,10 +59,12 @@ const Lobby: React.FC = () => {
 
   const assignTeamsRandomly = () => {
     socket.emit("assign-teams-randomly", { roomCode });
-  };  
+  };
 
   const handleLeaveRoom = () => {
-    socket.emit("leave-room", { roomCode, nickname });
+    if (roomCode) {
+      socket.emit("leave-room", { roomCode, nickname });
+    }
     navigate("/");
   };
 
