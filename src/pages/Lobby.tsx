@@ -41,12 +41,13 @@ const Lobby: React.FC = () => {
   }, [nickname, roomCode, isHost, avatar]);
 
   const generateInviteLink = () => {
-    const baseUrl = window.location.origin;
-    const link = `${baseUrl}#/?room=${roomCode}`;
+    const baseUrl = window.location.origin + '/ChronoWhale'; // Ajoutez '/ChronoWhale' ici
+    const link = `${baseUrl}/?room=${roomCode}`; // Ajoutez '/?room=' pour inclure le code de la room
     setInviteLink(link);
     navigator.clipboard.writeText(link);
     alert(t.inviteLinkCopied); // Traduction du message d'alerte
   };
+  
 
   const handleJoinTeam = (team?: number) => {
     socket.emit("join-team", { roomCode, nickname, team });
