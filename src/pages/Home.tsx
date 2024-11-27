@@ -146,30 +146,28 @@ const Home: React.FC = () => {
 
       {/* Affichage des salons disponibles */}
       <div className="available-rooms">
-  <h2>Salons disponibles</h2>
-  {availableRooms.length > 0 ? (
-    <ul>
-      {availableRooms.map((room) => (
-        <li key={room.roomCode}>
-          <span>
-            {t.roomOf} {room.host} - {t.players} : {room.players} {/* Afficher l'hôte au lieu du code du salon */}
-          </span>
-          <button onClick={() => setRoomCode(room.roomCode)}>
-            {t.join}
-          </button>
-        </li>
-      ))}
-    </ul>
-  ) : (
-    <p>Aucun salon disponible pour le moment.</p>
-  )}
-  {/* Bouton de rafraîchissement avec icône de reload */}
-  <button onClick={refreshRooms} className={`reload-button ${isLoading ? 'loading' : ''}`}>
-    <FaSync className={isLoading ? 'spinning' : ''} />
-  </button>
-</div>
-
-
+      <h2>Salons disponibles</h2>
+      {availableRooms.length > 0 ? (
+        <ul>
+          {availableRooms.map((room) => (
+            <li key={room.roomCode}>
+              <span>
+                {t.roomOf} {room.host} - {t.players} : {room.players} {/* Afficher l'hôte au lieu du code du salon */}
+              </span>
+              <button onClick={() => setRoomCode(room.roomCode)}>
+                {t.join}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Aucun salon disponible pour le moment.</p>
+      )}
+      {/* Bouton de rafraîchissement avec icône de reload */}
+      <button onClick={refreshRooms} className={`reload-button ${isLoading ? 'loading' : ''}`}>
+        <FaSync className={isLoading ? 'spinning' : ''} />
+      </button>
+    </div>
       <p>Avatars by <a href="https://www.freepik.com" target="_blank" rel="noopener noreferrer">Freepik</a></p>
     </div>
   );
