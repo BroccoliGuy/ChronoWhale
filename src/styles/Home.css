@@ -1,0 +1,29 @@
+/* Taille des avatars */
+.avatar-selector {
+    display: flex;
+  }
+  
+  .avatar-image {
+    width: 150px; /* Taille de l'avatar */
+    height: 150px; /* Taille de l'avatar */
+    object-fit: cover; /* Pour que l'image garde ses proportions */
+    transition: transform 0.2s ease-in-out; /* Animation lors du changement d'avatar */
+  }
+  
+  .avatar-image:hover {
+    transform: scale(1.1); /* Zoom léger au survol */
+  }
+  
+  .avatar-button {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .avatar-button:hover {
+    color: #702e2e; /* Change la couleur au survol */
+  }
+  

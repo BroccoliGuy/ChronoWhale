@@ -1,0 +1,56 @@
+.lobby-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  
+  .teams-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+  
+  .team {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 30%;
+    text-align: center;
+  }
+  
+  .team h2 {
+    background-color: #413030;
+    margin: -10px -10px 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .team.no-team {
+    background-color: #523a3a;
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  button {
+    padding: 10px 15px;
+    cursor: pointer;
+    background-color: #50545a;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  button:hover {
+    background-color: #486f97;
+  }
+  
+  .player-avatar {
+    width: 40px; /* Taille de l'avatar */
+    height: 40px;
+    margin-right: 10px; /* Espacement entre l'avatar et le nom */
+  }
