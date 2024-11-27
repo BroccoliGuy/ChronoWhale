@@ -42,7 +42,7 @@ const Lobby: React.FC = () => {
 
   const generateInviteLink = () => {
     const baseUrl = window.location.origin;
-    const link = `${baseUrl}/?room=${roomCode}`;
+    const link = `${baseUrl}#/lobby?room=${roomCode}`;
     setInviteLink(link);
     navigator.clipboard.writeText(link);
     alert(t.inviteLinkCopied); // Traduction du message d'alerte
