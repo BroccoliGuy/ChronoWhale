@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/ChronoWhale/static/css/main.07b2c1d4.css",
-    "main.js": "/ChronoWhale/static/js/main.e592c4a5.js",
+    "main.css": "/ChronoWhale/static/css/main.4a2b131c.css",
+    "main.js": "/ChronoWhale/static/js/main.4278ce65.js",
     "static/js/453.35c2eb94.chunk.js": "/ChronoWhale/static/js/453.35c2eb94.chunk.js",
     "static/media/succubu.png": "/ChronoWhale/static/media/succubu.ef1e0ddaaf03fd9d6c6f.png",
     "static/media/succubus.png": "/ChronoWhale/static/media/succubus.36922338ff40263e65d1.png",
@@ -52,12 +52,12 @@
     "static/media/sobek.png": "/ChronoWhale/static/media/sobek.d5cd4890311a4e08a50d.png",
     "static/media/swordfish.png": "/ChronoWhale/static/media/swordfish.c45d97aeba90a7770876.png",
     "index.html": "/ChronoWhale/index.html",
-    "main.07b2c1d4.css.map": "/ChronoWhale/static/css/main.07b2c1d4.css.map",
-    "main.e592c4a5.js.map": "/ChronoWhale/static/js/main.e592c4a5.js.map",
+    "main.4a2b131c.css.map": "/ChronoWhale/static/css/main.4a2b131c.css.map",
+    "main.4278ce65.js.map": "/ChronoWhale/static/js/main.4278ce65.js.map",
     "453.35c2eb94.chunk.js.map": "/ChronoWhale/static/js/453.35c2eb94.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.07b2c1d4.css",
-    "static/js/main.e592c4a5.js"
+    "static/css/main.4a2b131c.css",
+    "static/js/main.4278ce65.js"
   ]
 }
