@@ -22,7 +22,9 @@ const translations = {
       leaveLobby: 'Quitter le salon',
       roomOf: 'Salon de',
       join: 'Rejoindre',
-      players: 'Joueurs'
+      players: 'Joueurs',
+      private: 'Privé',
+      public: 'Public'
     },
     en: {
       title: 'ChronoWhale',
@@ -47,7 +49,9 @@ const translations = {
       leaveLobby: 'Leave Lobby',
       roomOf: 'Room of',
       join: 'Join',
-      players: 'Players'
+      players: 'Players',
+      private: 'Private',
+      public: 'Public'
     },
   };
   

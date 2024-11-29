@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { socket, connectSocket } from "../utils/socket";
-import { useLanguage } from '../utils/LanguageContext'; // Import du hook de langue
-import translations from "../store/translations"; // Import des traductions
+import { useLanguage } from '../utils/LanguageContext';
+import translations from "../store/translations";
+import Tchat from "../components/Tchat";
 import '../styles/Lobby.css';
 
 const Lobby: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { nickname, roomCode, isHost, avatar } = location.state || { nickname: "", roomCode: "", isHost: false, avatar: "" }; // Avatar ajouté
-  const { language, setLanguage } = useLanguage(); // Utilisation du hook de langue
-  const t = translations[language]; // Accès aux traductions
+  const { nickname, roomCode, isHost, avatar } = location.state || { nickname: "", roomCode: "", isHost: false, avatar: "" };
+  const { language, setLanguage } = useLanguage();
+  const t = translations[language];
 
   const [players, setPlayers] = useState<{ name: string; isHost: boolean; avatar: string; team?: number }[]>([
-    { name: nickname, isHost, avatar, team: undefined }, // Ajouter l'avatar
+    { name: nickname, isHost, avatar, team: undefined },
   ]);
   const [inviteLink, setInviteLink] = useState<string>("");
 
@@ -21,7 +22,7 @@ const Lobby: React.FC = () => {
     connectSocket();
 
     if (nickname && roomCode) {
-      socket.emit("join-room", { roomCode, nickname, isHost, avatar }); // Transmettre l'avatar lors de la connexion
+      socket.emit("join-room", { roomCode, nickname, isHost, avatar });
     }
 
     socket.on("update-players", (players: { name: string; isHost: boolean; avatar: string; team?: number }[]) => {
@@ -41,13 +42,12 @@ const Lobby: React.FC = () => {
   }, [nickname, roomCode, isHost, avatar]);
 
   const generateInviteLink = () => {
-    const baseUrl = window.location.origin + '/ChronoWhale'; // Ajoutez '/ChronoWhale' ici
-    const link = `${baseUrl}/?room=${roomCode}`; // Ajoutez '/?room=' pour inclure le code de la room
+    const baseUrl = window.location.origin + '/ChronoWhale';
+    const link = `${baseUrl}/?room=${roomCode}`;
     setInviteLink(link);
     navigator.clipboard.writeText(link);
-    alert(t.inviteLinkCopied); // Traduction du message d'alerte
+    alert(t.inviteLinkCopied);
   };
-  
 
   const handleJoinTeam = (team?: number) => {
     socket.emit("join-team", { roomCode, nickname, team });
@@ -55,7 +55,7 @@ const Lobby: React.FC = () => {
 
   const assignTeamsRandomly = () => {
     socket.emit("assign-teams-randomly", { roomCode });
-  };  
+  };
 
   const handleLeaveRoom = () => {
     socket.emit("leave-room", { roomCode, nickname });
@@ -72,12 +72,14 @@ const Lobby: React.FC = () => {
   const team1ButtonText = isTeam1Full ? t.teamFull : `${t.joinTeam}: ${team1.length}/2`;
   const team2ButtonText = isTeam2Full ? t.teamFull : `${t.joinTeam}: ${team2.length}/2`;
 
+  // Vérifier si l'utilisateur est dans une équipe
+  const isInTeam = players.some(player => player.name === nickname && player.team !== undefined);
+
   return (
     <div className="lobby-container">
       <h1>{t.lobbyTitle} {roomCode}</h1>
       <p>{t.welcome}, {nickname}!</p>
 
-      {/* Sélecteur de langue */}
       <select
         value={language}
         onChange={(e) => setLanguage(e.target.value as 'fr' | 'en')}
@@ -139,9 +141,11 @@ const Lobby: React.FC = () => {
         <button onClick={generateInviteLink}>{t.copyInviteLink}</button>
         {inviteLink && <p>{t.inviteLink}: <a href={inviteLink}>{inviteLink}</a></p>}
       </div>
-
       <button onClick={() => console.log("Commencer le jeu")}>{t.startGame}</button>
       <button onClick={handleLeaveRoom}>{t.leaveLobby}</button>
+
+      {/* Passer isInTeam à Tchat */}
+      <Tchat roomCode={roomCode} nickname={nickname} isInTeam={isInTeam} />
     </div>
   );
 };
