@@ -20,7 +20,7 @@
   }
   
   .message.own {
-    text-align: right;
+    text-align: left;
   }
   
   .input-container {
@@ -45,11 +45,7 @@
     border-radius: 4px;
     cursor: pointer;
   }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
+ 
   .tag {
     font-size: 0.8em;
     color: grey;

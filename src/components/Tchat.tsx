@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { socket } from "../utils/socket";
+import { useLanguage } from '../utils/LanguageContext';
+import translations from "../store/translations";
 import "../styles/Tchat.css";
 
 const Tchat: React.FC<{ roomCode: string; nickname: string; isInTeam: boolean }> = ({ roomCode, nickname, isInTeam }) => {
   const [messages, setMessages] = useState<{ sender: string; content: string; scope: string; team?: number }[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [messageScope, setMessageScope] = useState<"global" | "team">("global");
-  
+  const { language, setLanguage } = useLanguage();
+  const t = translations[language];
+
   // Référence pour la dernière div de message
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -77,11 +81,11 @@ const Tchat: React.FC<{ roomCode: string; nickname: string; isInTeam: boolean }>
         <input
           type="text"
           value={newMessage}
-          placeholder="Type your message..."
+          placeholder={t.placeholder}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
         />
-        <button onClick={handleSendMessage}>Send</button>
+        <button onClick={handleSendMessage}>{t.send}</button>
       </div>
     </div>
   );

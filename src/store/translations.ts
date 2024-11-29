@@ -24,7 +24,9 @@ const translations = {
       join: 'Rejoindre',
       players: 'Joueurs',
       private: 'Privé',
-      public: 'Public'
+      public: 'Public',
+      send: 'Envoyer',
+      placeholder: "Tapez votre message..."
     },
     en: {
       title: 'ChronoWhale',
@@ -51,7 +53,9 @@ const translations = {
       join: 'Join',
       players: 'Players',
       private: 'Private',
-      public: 'Public'
+      public: 'Public',
+      send: 'Send',
+      placeholder: "Type your message..."
     },
   };
   
