@@ -31,28 +31,28 @@ const Lobby: React.FC = () => {
 
   useEffect(() => {
     connectSocket();
-
+  
     if (nickname && roomCode) {
       socket.emit("join-room", { roomCode, nickname, isHost, avatar });
-
+  
       // Récupérer l'équipe de l'utilisateur depuis localStorage
       const storedTeam = localStorage.getItem(`${nickname}-team`);
       if (storedTeam) {
         const team = parseInt(storedTeam, 10);
         handleJoinTeam(team);  // Attribuer immédiatement l'équipe
       }
-
+  
       // Mettre à jour la liste des joueurs
       socket.on("update-players", (players: { name: string; isHost: boolean; avatar: string; team?: number }[]) => {
         setPlayers(players);
         setIsLoading(false);  // Indiquer que les informations sont prêtes
       });
     }
-
+  
     const handleUnload = () => {
       socket.emit("leave-room", { roomCode, nickname });
     };
-
+  
     window.addEventListener("beforeunload", handleUnload);
     return () => {
       socket.off("update-players");
@@ -60,6 +60,7 @@ const Lobby: React.FC = () => {
       window.removeEventListener("beforeunload", handleUnload);
     };
   }, [nickname, roomCode, isHost, avatar, handleJoinTeam]);
+  
 
   const generateInviteLink = () => {
     const baseUrl = window.location.origin + '/ChronoWhale';
