@@ -13,11 +13,9 @@ const Lobby: React.FC = () => {
   const { language, setLanguage } = useLanguage();
   const t = translations[language];
 
-  const [players, setPlayers] = useState<{ name: string; isHost: boolean; avatar: string; team?: number }[]>([
-    { name: nickname, isHost, avatar, team: undefined },
-  ]);
+  const [players, setPlayers] = useState<{ name: string; isHost: boolean; avatar: string; team?: number }[]>([]);
   const [inviteLink, setInviteLink] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true); // État de chargement
+  const [isLoading, setIsLoading] = useState(true);  // Ajout de l'état de chargement
 
   // Utilisation de useCallback pour éviter les dépendances inutiles
   const handleJoinTeam = useCallback((team?: number) => {
@@ -41,18 +39,15 @@ const Lobby: React.FC = () => {
       const storedTeam = localStorage.getItem(`${nickname}-team`);
       if (storedTeam) {
         const team = parseInt(storedTeam, 10);
-        handleJoinTeam(team);
+        handleJoinTeam(team);  // Attribuer immédiatement l'équipe
       }
+
+      // Mettre à jour la liste des joueurs
+      socket.on("update-players", (players: { name: string; isHost: boolean; avatar: string; team?: number }[]) => {
+        setPlayers(players);
+        setIsLoading(false);  // Indiquer que les informations sont prêtes
+      });
     }
-
-    socket.on("update-players", (players: { name: string; isHost: boolean; avatar: string; team?: number }[]) => {
-      setPlayers(players);
-
-      // Vérifier si l'utilisateur a une équipe assignée, et mettre à jour l'état de chargement
-      if (players.some(player => player.name === nickname && player.team !== undefined)) {
-        setIsLoading(false); // Arrêter le chargement
-      }
-    });
 
     const handleUnload = () => {
       socket.emit("leave-room", { roomCode, nickname });
@@ -64,7 +59,7 @@ const Lobby: React.FC = () => {
       socket.disconnect();
       window.removeEventListener("beforeunload", handleUnload);
     };
-  }, [nickname, roomCode, isHost, avatar, handleJoinTeam]);  // handleJoinTeam est maintenant stable
+  }, [nickname, roomCode, isHost, avatar, handleJoinTeam]);
 
   const generateInviteLink = () => {
     const baseUrl = window.location.origin + '/ChronoWhale';
@@ -97,7 +92,8 @@ const Lobby: React.FC = () => {
   const isInTeam = players.some(player => player.name === nickname && player.team !== undefined);
 
   if (isLoading) {
-    return <div>Loading...</div>; // Afficher un message de chargement ou un écran vide
+    // Afficher un écran de chargement ou un placeholder pendant la récupération des données
+    return <div>Loading...</div>;
   }
 
   return (
