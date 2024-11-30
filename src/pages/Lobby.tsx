@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { socket, connectSocket } from "../utils/socket";
 import { useLanguage } from '../utils/LanguageContext';
@@ -17,12 +17,33 @@ const Lobby: React.FC = () => {
     { name: nickname, isHost, avatar, team: undefined },
   ]);
   const [inviteLink, setInviteLink] = useState<string>("");
+  const [isTeamAssigned, setIsTeamAssigned] = useState<boolean>(false);  // État local pour vérifier si l'utilisateur a une équipe
+
+  // Utilisation de useCallback pour éviter les dépendances inutiles
+  const handleJoinTeam = useCallback((team?: number) => {
+    // Sauvegarder l'équipe dans localStorage
+    if (team !== undefined) {
+      localStorage.setItem(`${nickname}-team`, team.toString());
+    } else {
+      localStorage.removeItem(`${nickname}-team`);
+    }
+
+    socket.emit("join-team", { roomCode, nickname, team });
+  }, [nickname, roomCode]);
 
   useEffect(() => {
     connectSocket();
 
     if (nickname && roomCode) {
       socket.emit("join-room", { roomCode, nickname, isHost, avatar });
+
+      // Récupérer l'équipe de l'utilisateur depuis localStorage
+      const storedTeam = localStorage.getItem(`${nickname}-team`);
+      if (storedTeam) {
+        const team = parseInt(storedTeam, 10);
+        handleJoinTeam(team);
+        setIsTeamAssigned(true);  // Marquer que l'utilisateur est assigné à une équipe
+      }
     }
 
     socket.on("update-players", (players: { name: string; isHost: boolean; avatar: string; team?: number }[]) => {
@@ -39,7 +60,7 @@ const Lobby: React.FC = () => {
       socket.disconnect();
       window.removeEventListener("beforeunload", handleUnload);
     };
-  }, [nickname, roomCode, isHost, avatar]);
+  }, [nickname, roomCode, isHost, avatar, handleJoinTeam]);  // handleJoinTeam est maintenant stable
 
   const generateInviteLink = () => {
     const baseUrl = window.location.origin + '/ChronoWhale';
@@ -47,10 +68,6 @@ const Lobby: React.FC = () => {
     setInviteLink(link);
     navigator.clipboard.writeText(link);
     alert(t.inviteLinkCopied);
-  };
-
-  const handleJoinTeam = (team?: number) => {
-    socket.emit("join-team", { roomCode, nickname, team });
   };
 
   const assignTeamsRandomly = () => {
@@ -89,17 +106,20 @@ const Lobby: React.FC = () => {
       </select>
 
       <div className="teams-container">
-        <div className="team no-team">
-          <h2>{t.noTeam}</h2>
-          <ul>
-            {noTeam.map((player, index) => (
-              <li key={index}>
-                <img src={player.avatar} alt={`${player.name}'s avatar`} className="player-avatar" />
-                {player.name} {player.isHost && <span>({t.host})</span>}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {/* Afficher les joueurs sans équipe seulement si l'utilisateur n'a pas encore été assigné à une équipe */}
+        {isTeamAssigned && (
+          <div className="team no-team">
+            <h2>{t.noTeam}</h2>
+            <ul>
+              {noTeam.map((player, index) => (
+                <li key={index}>
+                  <img src={player.avatar} alt={`${player.name}'s avatar`} className="player-avatar" />
+                  {player.name} {player.isHost && <span>({t.host})</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="team">
           <h2>{t.team1}</h2>
           <ul>

@@ -8,7 +8,7 @@ const Tchat: React.FC<{ roomCode: string; nickname: string; isInTeam: boolean }>
   const [messages, setMessages] = useState<{ sender: string; content: string; scope: string; team?: number }[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [messageScope, setMessageScope] = useState<"global" | "team">("global");
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const t = translations[language];
 
   // Référence pour la dernière div de message
