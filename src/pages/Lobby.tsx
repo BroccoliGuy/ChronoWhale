@@ -17,7 +17,7 @@ const Lobby: React.FC = () => {
     { name: nickname, isHost, avatar, team: undefined },
   ]);
   const [inviteLink, setInviteLink] = useState<string>("");
-  const [isTeamAssigned, setIsTeamAssigned] = useState<boolean>(false);  // État local pour vérifier si l'utilisateur a une équipe
+  const [isLoading, setIsLoading] = useState<boolean>(true); // État de chargement
 
   // Utilisation de useCallback pour éviter les dépendances inutiles
   const handleJoinTeam = useCallback((team?: number) => {
@@ -42,12 +42,16 @@ const Lobby: React.FC = () => {
       if (storedTeam) {
         const team = parseInt(storedTeam, 10);
         handleJoinTeam(team);
-        setIsTeamAssigned(true);  // Marquer que l'utilisateur est assigné à une équipe
       }
     }
 
     socket.on("update-players", (players: { name: string; isHost: boolean; avatar: string; team?: number }[]) => {
       setPlayers(players);
+
+      // Vérifier si l'utilisateur a une équipe assignée, et mettre à jour l'état de chargement
+      if (players.some(player => player.name === nickname && player.team !== undefined)) {
+        setIsLoading(false); // Arrêter le chargement
+      }
     });
 
     const handleUnload = () => {
@@ -92,6 +96,10 @@ const Lobby: React.FC = () => {
   // Vérifier si l'utilisateur est dans une équipe
   const isInTeam = players.some(player => player.name === nickname && player.team !== undefined);
 
+  if (isLoading) {
+    return <div>Loading...</div>; // Afficher un message de chargement ou un écran vide
+  }
+
   return (
     <div className="lobby-container">
       <h1>{t.lobbyTitle} {roomCode}</h1>
@@ -106,20 +114,17 @@ const Lobby: React.FC = () => {
       </select>
 
       <div className="teams-container">
-        {/* Afficher les joueurs sans équipe seulement si l'utilisateur n'a pas encore été assigné à une équipe */}
-        {isTeamAssigned && (
-          <div className="team no-team">
-            <h2>{t.noTeam}</h2>
-            <ul>
-              {noTeam.map((player, index) => (
-                <li key={index}>
-                  <img src={player.avatar} alt={`${player.name}'s avatar`} className="player-avatar" />
-                  {player.name} {player.isHost && <span>({t.host})</span>}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <div className="team no-team">
+          <h2>{t.noTeam}</h2>
+          <ul>
+            {noTeam.map((player, index) => (
+              <li key={index}>
+                <img src={player.avatar} alt={`${player.name}'s avatar`} className="player-avatar" />
+                {player.name} {player.isHost && <span>({t.host})</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
         <div className="team">
           <h2>{t.team1}</h2>
           <ul>
